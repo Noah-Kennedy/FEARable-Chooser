@@ -30,7 +30,7 @@ public class ChooserArduino extends Arduino implements FEARableSelector{
 	
 	@Override
 	public int getChosen() {
-		int chosen;
+		int chosen = 0;
 		while(!isChosen()){
 			//TODO Write the code to get the transmitted data
 		}
