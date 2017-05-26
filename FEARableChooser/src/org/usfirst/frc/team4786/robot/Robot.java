@@ -1,16 +1,18 @@
 
 package org.usfirst.frc.team4786.robot;
 
+import org.usfirst.frc.team4786.robot.commands.BlueLight;
+import org.usfirst.frc.team4786.robot.commands.GreenLight;
+import org.usfirst.frc.team4786.robot.commands.RedLight;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import fearlib.Arduino;
 import fearlib.FEARableChooser;
 import fearlib.SwitchBoard;
-
-import org.usfirst.frc.team4786.robot.commands.ExampleCommand;
-import org.usfirst.frc.team4786.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -21,8 +23,8 @@ import org.usfirst.frc.team4786.robot.subsystems.ExampleSubsystem;
  */
 public class Robot extends IterativeRobot {
 
-	public static final ExampleSubsystem exampleSubsystem = new ExampleSubsystem();
 	public static OI oi;
+	public static Arduino leds = new Arduino(8);
 	public static DigitalInput[] board = {new DigitalInput(0), new DigitalInput(1), new DigitalInput(2)};
 	public static SwitchBoard selector = new SwitchBoard(board);
 
@@ -36,7 +38,9 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		oi = new OI();
 		chooser.setOverride(new DigitalInput(7));
-		chooser.addDefaultCommand(new ExampleCommand());
+		chooser.addDefaultCommand(new GreenLight());
+		chooser.addCommand(new RedLight());
+		chooser.addCommand(new BlueLight());
 	}
 
 	/**
@@ -54,17 +58,6 @@ public class Robot extends IterativeRobot {
 		Scheduler.getInstance().run();
 	}
 
-	/**
-	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable
-	 * chooser code works with the Java SmartDashboard. If you prefer the
-	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
-	 * getString code to get the auto name from the text box below the Gyro
-	 *
-	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons
-	 * to the switch structure below with additional strings & commands.
-	 */
 	@Override
 	public void autonomousInit() {
 		autonomousCommand = chooser.getSelected();
@@ -82,10 +75,6 @@ public class Robot extends IterativeRobot {
 
 	@Override
 	public void teleopInit() {
-		// This makes sure that the autonomous stops running when
-		// teleop starts running. If you want the autonomous to
-		// continue until interrupted by another command, remove
-		// this line or comment it out.
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 	}
